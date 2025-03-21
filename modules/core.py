@@ -253,6 +253,6 @@ def run() -> None:
         start()
     else:
         window = ui.init(start, destroy, modules.globals.lang)
+        if modules.globals.face_path:  # Pa446
+            ui.webcam_preview(window, 0, modules.globals.face_path)  # Pa446
         window.mainloop()
-    if modules.globals.face_path:  # Pa446
-        ui.webcam_preview(window, 0)  # Pa446
