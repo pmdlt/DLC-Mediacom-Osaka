@@ -89,10 +89,6 @@ def parse_args() -> None:
         modules.globals.fp_ui['face_enhancer'] = False
 
     # translate deprecated args
-    if args.source_path_deprecated:
-        print('\033[33mArgument -f and --face are deprecated. Use -s and --source instead.\033[0m')
-        modules.globals.source_path = args.source_path_deprecated
-        modules.globals.output_path = normalize_output_path(args.source_path_deprecated, modules.globals.target_path, args.output_path)
     if args.cpu_cores_deprecated:
         print('\033[33mArgument --cpu-cores is deprecated. Use --execution-threads instead.\033[0m')
         modules.globals.execution_threads = args.cpu_cores_deprecated
