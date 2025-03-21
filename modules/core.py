@@ -51,6 +51,7 @@ def parse_args() -> None:
     program.add_argument('--execution-provider', help='execution provider', dest='execution_provider', default=['cpu'], choices=suggest_execution_providers(), nargs='+')
     program.add_argument('--execution-threads', help='number of execution threads', dest='execution_threads', type=int, default=suggest_execution_threads())
     program.add_argument('-v', '--version', action='version', version=f'{modules.metadata.name} {modules.metadata.version}')
+    program.add_argument('--face', help='select a face file from the /faces folder', dest='face_path')  # P4e3a
 
     # register deprecated args
     program.add_argument('-f', '--face', help=argparse.SUPPRESS, dest='source_path_deprecated')
@@ -80,6 +81,7 @@ def parse_args() -> None:
     modules.globals.execution_providers = decode_execution_providers(args.execution_provider)
     modules.globals.execution_threads = args.execution_threads
     modules.globals.lang = args.lang
+    modules.globals.face_path = args.face_path  # P4e3a
 
     #for ENHANCER tumbler:
     if 'face_enhancer' in args.frame_processor:
@@ -257,3 +259,5 @@ def run() -> None:
     else:
         window = ui.init(start, destroy, modules.globals.lang)
         window.mainloop()
+    if modules.globals.face_path:  # Pa446
+        ui.webcam_preview(window, 0)  # Pa446

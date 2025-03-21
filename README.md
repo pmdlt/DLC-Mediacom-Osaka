@@ -243,6 +243,13 @@ python run.py --execution-provider openvino
 -   Use a screen capture tool like OBS to stream.
 -   To change the face, select a new source image.
 
+**3. Automatic Webcam Mode**
+
+-   Execute `python run.py --face /faces/your_face_image.png`.
+-   The webcam preview will launch automatically with the selected face file.
+-   Use a screen capture tool like OBS to stream.
+-   To change the face, select a new source image.
+
 ## Command Line Arguments (Unmaintained)
 
 ```
@@ -266,6 +273,7 @@ options:
   --execution-provider {cpu} [{cpu} ...]                   available execution provider (choices: cpu, ...)
   --execution-threads EXECUTION_THREADS                    number of execution threads
   -v, --version                                            show program's version number and exit
+  --face FACE_PATH                                         select a face file from the /faces folder
 ```
 
 Looking for a CLI mode? Using the -s/--source argument will make the run program in cli mode.

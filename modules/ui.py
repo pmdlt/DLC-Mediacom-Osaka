@@ -777,13 +777,16 @@ def update_preview(frame_number: int = 0) -> None:
         PREVIEW.deiconify()
 
 
-def webcam_preview(root: ctk.CTk, camera_index: int):
+def webcam_preview(root: ctk.CTk, camera_index: int, face_path: str = None):
     global POPUP_LIVE
 
     if POPUP_LIVE and POPUP_LIVE.winfo_exists():
         update_status("Source x Target Mapper is already open.")
         POPUP_LIVE.focus()
         return
+
+    if face_path:
+        modules.globals.source_path = face_path
 
     if not modules.globals.map_faces:
         if modules.globals.source_path is None:
