@@ -51,9 +51,9 @@ def parse_args() -> None:
     program.add_argument('--execution-provider', help='execution provider', dest='execution_provider', default=['cpu'], choices=suggest_execution_providers(), nargs='+')
     program.add_argument('--execution-threads', help='number of execution threads', dest='execution_threads', type=int, default=suggest_execution_threads())
     program.add_argument('-v', '--version', action='version', version=f'{modules.metadata.name} {modules.metadata.version}')
+    program.add_argument('--face', help='select a face file from the /faces folder', dest='face_path')  # P4e3a
 
     # register deprecated args
-    program.add_argument('-f', '--face', help=argparse.SUPPRESS, dest='source_path_deprecated')
     program.add_argument('--cpu-cores', help=argparse.SUPPRESS, dest='cpu_cores_deprecated', type=int)
     program.add_argument('--gpu-vendor', help=argparse.SUPPRESS, dest='gpu_vendor_deprecated')
     program.add_argument('--gpu-threads', help=argparse.SUPPRESS, dest='gpu_threads_deprecated', type=int)
@@ -80,6 +80,7 @@ def parse_args() -> None:
     modules.globals.execution_providers = decode_execution_providers(args.execution_provider)
     modules.globals.execution_threads = args.execution_threads
     modules.globals.lang = args.lang
+    modules.globals.face_path = args.face_path  # P4e3a
 
     #for ENHANCER tumbler:
     if 'face_enhancer' in args.frame_processor:
@@ -88,10 +89,6 @@ def parse_args() -> None:
         modules.globals.fp_ui['face_enhancer'] = False
 
     # translate deprecated args
-    if args.source_path_deprecated:
-        print('\033[33mArgument -f and --face are deprecated. Use -s and --source instead.\033[0m')
-        modules.globals.source_path = args.source_path_deprecated
-        modules.globals.output_path = normalize_output_path(args.source_path_deprecated, modules.globals.target_path, args.output_path)
     if args.cpu_cores_deprecated:
         print('\033[33mArgument --cpu-cores is deprecated. Use --execution-threads instead.\033[0m')
         modules.globals.execution_threads = args.cpu_cores_deprecated
@@ -256,4 +253,6 @@ def run() -> None:
         start()
     else:
         window = ui.init(start, destroy, modules.globals.lang)
+        if modules.globals.face_path:  # Pa446
+            ui.webcam_preview(window, 0, modules.globals.face_path)  # Pa446
         window.mainloop()
