@@ -245,7 +245,7 @@ python run.py --execution-provider openvino
 
 **3. Automatic Webcam Mode**
 
--   Execute `python run.py --face /faces/your_face_image.png`.
+-   Execute `python run.py --face faces/your_face_image.png`.
 -   The webcam preview will launch automatically with the selected face file.
 -   Use a screen capture tool like OBS to stream.
 -   To change the face, select a new source image.
