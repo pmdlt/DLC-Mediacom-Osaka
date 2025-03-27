@@ -881,10 +881,32 @@ def create_webcam_preview(camera_index: int):
 
     preview_label.configure(width=PREVIEW_DEFAULT_WIDTH, height=PREVIEW_DEFAULT_HEIGHT)
     PREVIEW.deiconify()
-
-    PREVIEW.overrideredirect(True)
-    PREVIEW.geometry("{0}x{1}+0+0".format(PREVIEW.winfo_screenwidth(), PREVIEW.winfo_screenheight()))
-    PREVIEW.bind("<Escape>", lambda e: PREVIEW.withdraw())
+    
+    # Create a flag to track if the user wants to exit
+    exit_preview = False
+    
+    def on_key_press(event):
+        nonlocal exit_preview
+        if event.keysym == 'Escape':
+            exit_preview = True
+    
+    # Set window to fullscreen mode more reliably
+    PREVIEW.attributes('-fullscreen', True)
+    
+    # Set keyboard bindings - add to multiple widgets to ensure key capture
+    PREVIEW.bind("<Key>", on_key_press)
+    preview_label.bind("<Key>", on_key_press)
+    ROOT.bind("<Key>", on_key_press)
+    
+    # Create a message about how to exit
+    exit_msg = ctk.CTkLabel(PREVIEW, text=_("Press ESC to exit"), 
+                           bg_color="black", text_color="white",
+                           corner_radius=10, padx=10, pady=5)
+    exit_msg.place(relx=0.5, rely=0.05, anchor="center")
+    
+    # Focus on preview to ensure key events work
+    PREVIEW.focus_set()
+    preview_label.focus_set()
 
     frame_processors = get_frame_processors_modules(modules.globals.frame_processors)
     source_image = None
@@ -893,11 +915,15 @@ def create_webcam_preview(camera_index: int):
     frame_count = 0
     fps = 0
 
-    while True:
+    while not exit_preview:
+        # Process events at the beginning of each loop iteration
+        ROOT.update()
+        
         ret, frame = cap.read()
         if not ret:
             break
 
+        # Rest of the frame processing code...
         temp_frame = frame.copy()
 
         if modules.globals.live_mirror:
@@ -907,7 +933,6 @@ def create_webcam_preview(camera_index: int):
             temp_frame = fit_image_to_size(
                 temp_frame, PREVIEW.winfo_width(), PREVIEW.winfo_height()
             )
-
         else:
             temp_frame = fit_image_to_size(
                 temp_frame, PREVIEW.winfo_width(), PREVIEW.winfo_height()
@@ -951,6 +976,17 @@ def create_webcam_preview(camera_index: int):
                 2,
             )
 
+        # Add an "ESC to exit" reminder on the frame
+        cv2.putText(
+            temp_frame,
+            "Press ESC to exit",
+            (10, temp_frame.shape[0] - 10),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (255, 255, 255),
+            2,
+        )
+
         image = cv2.cvtColor(temp_frame, cv2.COLOR_BGR2RGB)
         image = Image.fromarray(image)
         image = ImageOps.contain(
@@ -958,13 +994,17 @@ def create_webcam_preview(camera_index: int):
         )
         image = ctk.CTkImage(image, size=image.size)
         preview_label.configure(image=image)
-        ROOT.update()
+        
+        # Short delay to allow UI events to be processed
+        PREVIEW.update_idletasks()
+        time.sleep(0.01)  # Small delay to allow UI events to be processed
 
-        if PREVIEW.state() == "withdrawn":
-            break
-
+    # Clean up
     cap.release()
+    ROOT.unbind("<Key>")  # Remove the temporary binding
+    PREVIEW.attributes('-fullscreen', False)  # Restore normal window
     PREVIEW.withdraw()
+    update_status("Preview closed")
 
 
 def create_source_target_popup_for_webcam(
