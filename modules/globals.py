@@ -42,4 +42,3 @@ mask_feather_ratio = 8
 mask_down_size = 0.50
 mask_size = 1
 face_path = None
-max_faces = None

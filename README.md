@@ -274,7 +274,6 @@ options:
   --execution-threads EXECUTION_THREADS                    number of execution threads
   -v, --version                                            show program's version number and exit
   --face FACE_PATH                                         select a face file from the /faces folder
-  --max-faces MAX_FACES                                    limit the number of max swapped faces
 ```
 
 Looking for a CLI mode? Using the -s/--source argument will make the run program in cli mode.

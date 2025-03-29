@@ -105,8 +105,6 @@ def process_frame(source_face: Face, temp_frame: Frame) -> Frame:
     if modules.globals.many_faces:
         many_faces = get_many_faces(temp_frame)
         if many_faces:
-            if modules.globals.max_faces is not None:
-                many_faces = many_faces[:modules.globals.max_faces]
             for target_face in many_faces:
                 if source_face and target_face:
                     temp_frame = swap_face(source_face, target_face, temp_frame)
@@ -170,8 +168,6 @@ def process_frame_v2(temp_frame: Frame, temp_frame_path: str = "") -> Frame:
         if modules.globals.many_faces:
             if detected_faces:
                 source_face = default_source_face()
-                if modules.globals.max_faces is not None:
-                    detected_faces = detected_faces[:modules.globals.max_faces]
                 for target_face in detected_faces:
                     temp_frame = swap_face(source_face, target_face, temp_frame)
 
