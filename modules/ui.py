@@ -882,6 +882,9 @@ def create_webcam_preview(camera_index: int):
     preview_label.configure(width=PREVIEW_DEFAULT_WIDTH, height=PREVIEW_DEFAULT_HEIGHT)
     PREVIEW.deiconify()
 
+    PREVIEW.overrideredirect(True)
+    PREVIEW.geometry("{0}x{1}+0+0".format(PREVIEW.winfo_screenwidth(), PREVIEW.winfo_screenheight()))
+
     frame_processors = get_frame_processors_modules(modules.globals.frame_processors)
     source_image = None
     prev_time = time.time()
